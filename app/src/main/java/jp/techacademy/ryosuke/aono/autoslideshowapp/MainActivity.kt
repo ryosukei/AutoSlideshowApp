@@ -42,17 +42,23 @@ class MainActivity : AppCompatActivity() {
 
         // 戻るボタンを押したら前の画像を表示する
         back_btn.setOnClickListener{
-            if(!isSlideShow){
+            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
                     backContent()
+            }else{
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSIONS_REQUEST_CODE)
             }
         }
         go_btn.setOnClickListener{
-            if(!isSlideShow){
+            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
                 goContent()
+            }else{
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSIONS_REQUEST_CODE)
             }
         }
         start_and_stop_btn.setOnClickListener{
             if(!isSlideShow){
+                go_btn.isEnabled = false
+                back_btn.isEnabled = false
                 start_and_stop_btn.text = "停止"
                 mTimer = Timer()
                 mTimer!!.schedule(object : TimerTask(){
@@ -64,6 +70,8 @@ class MainActivity : AppCompatActivity() {
                 }, 2000, 2000)
             }else{
                 mTimer!!.cancel()
+                go_btn.isEnabled = true
+                back_btn.isEnabled = true
                 start_and_stop_btn.text = "再生"
             }
             isSlideShow = !isSlideShow
